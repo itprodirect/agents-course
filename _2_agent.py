@@ -50,6 +50,18 @@ class MiniAgent(weave.Model):
             ]
 
         return []
+    
+    @weave.op()
+    def _think(self, turn_input, prev_id):
+        stream = self.client.responses.create(
+                model=self.model,
+                instructions=self.instructions,
+                tools=self.tools_schema,
+                input=turn_input,
+                previous_response_id=prev_id,
+                stream=True,
+            )
+        return stream
 
     # ---------- main loop ----------------------------------------------
     @weave.op()
@@ -59,15 +71,7 @@ class MiniAgent(weave.Model):
         prev_id, items = None, []
 
         while turn_input:
-            stream = self.client.responses.create(
-                model=self.model,
-                instructions=self.instructions,
-                tools=self.tools_schema,
-                input=turn_input,
-                previous_response_id=prev_id,
-                stream=True,
-                reasoning={"effort": "low"},
-            )
+            stream = self._think(turn_input, prev_id)
             turn_input = []  # collect next‑turn inputs
 
             for event in stream:
@@ -94,17 +98,14 @@ def send_email(to: str, subject: str, body: str):
 
 
 @weave.op()
-def chapter_2_agent():
+def run_handmade_agent(input: str):
     tools = [add, send_email]
     agent = MiniAgent(
-        instructions="You are a helpful assistant that can add numbers. Call the `add` tool to add numbers.",
+        instructions="You are a helpful assistant that can handle adding numbers with tool `add`. You can also call the `send_email` tool to send an email.",
         tools=tools,
     )
-    agent.run("What is 2 + 2?")
-    agent.run(
-        "Send an email to John Doe with the subject 'Hello' and body 'How are you?'"
-    )
-
+    return agent.run(input)
 
 if __name__ == "__main__":
-    chapter_2_agent()
+    run_handmade_agent("What is 2 + 2?")
+    run_handmade_agent("Send an email to John Doe with the subject 'Hello' and body 'How are you?'")

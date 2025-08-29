@@ -2,6 +2,99 @@
 Click here to get the course: [Agents Course](https://wandb.me/agents)
 A comprehensive course on building AI agents using Python, OpenAI, and Weave. This course covers various aspects of agent development, from basic workflows to complex multi-agent systems with memory and evaluation capabilities.
 
+## Installation
+
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/yourusername/agents-course.git
+    cd agents-course
+    ```
+
+2. **Create and activate a virtual environment with all dependencies:**
+
+    ### Option A: Using uv (Recommended)
+    ```bash
+    uv venv .venv
+    uv sync
+    ```
+
+    ### Option B: Using pip and requirements.txt
+    ```bash
+    python -m venv .venv
+    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+    pip install -r requirements.txt
+    ```
+
+    ### Option C: Using pyenv and pip
+    ```bash
+    # Install Python 3.11 if not already installed
+    pyenv install 3.11.0
+    pyenv local 3.11.0
+    
+    # Create virtual environment
+    python -m venv .venv
+    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+    pip install -r requirements.txt
+    ```
+
+    ### Option D: Using conda
+    ```bash
+    conda create -n agents-course python=3.11
+    conda activate agents-course
+    pip install -r requirements.txt
+    ```
+
+3. **Set up your environment variables:**
+    Create a `.env` file in the project root with:
+    ```env
+    WANDB_BASE_URL= # please set this if you are using dedicated cloud or onpremise
+    OPENAI_API_KEY=your_openai_api_key
+    WANDB_API_KEY=your_wandb_api_key
+    ```
+
+    To load these environment variables in your shell, you can run:
+    ```bash
+    set -a
+    source .env
+    set +a
+    ```
+
+## Troubleshooting
+
+### ZoneInfoNotFoundError: 'No time zone found with key UTC'
+
+If you encounter this error when running the evaluation scripts, try these solutions:
+
+1. **Ensure tzdata is installed** (should be automatic with requirements.txt):
+   ```bash
+   pip install tzdata
+   ```
+
+2. **For Windows users**, you may need to explicitly install timezone data:
+   ```bash
+   pip install tzdata zoneinfo-backport
+   ```
+
+3. **For Python < 3.9 users**, install the backport:
+   ```bash
+   pip install backports.zoneinfo tzdata
+   ```
+
+4. **Alternative workaround** - Set timezone environment variable before running:
+   ```bash
+   # Linux/Mac
+   export TZ=UTC
+   python _5.2_evals.py
+   
+   # Windows (Command Prompt)
+   set TZ=UTC
+   python _5.2_evals.py
+   
+   # Windows (PowerShell)
+   $env:TZ="UTC"
+   python _5.2_evals.py
+   ```
+
 ## Course Structure & Order
 
 The course is designed to be followed in order, with each module building on the previous one:
@@ -65,26 +158,7 @@ The course is designed to be followed in order, with each module building on the
 - Weights & Biases (wandb) API key
 - [npx](https://www.npmjs.com/package/npx) (for MCP integration, see `_6_mcp.py`)
 
-## Installation
 
-1. **Clone the repository:**
-    ```bash
-    git clone https://github.com/yourusername/agents-course.git
-    cd agents-course
-    ```
-
-2. **Create and activate a virtual environment with all dependencies:**
-    ```bash
-    uv venv .venv
-    uv sync
-    ```
-
-3. **Set up your environment variables:**
-    Create a `.env` file in the project root with:
-    ```env
-    OPENAI_API_KEY=your_openai_api_key
-    WANDB_API_KEY=your_wandb_api_key
-    ```
 
 ---
 

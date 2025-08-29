@@ -2,8 +2,10 @@ import asyncio
 from typing import Any, Callable, List, Optional, Tuple
 
 import weave
-from agents import Agent, Runner
+from agents import Agent, Runner, set_trace_processors
 from pydantic import Field
+from weave.integrations.openai_agents.openai_agents import WeaveTracingProcessor
+set_trace_processors([WeaveTracingProcessor()])
 
 import config
 from eval_utils import (
@@ -142,7 +144,7 @@ async def evaluate_agent_with_weave(
 
 
 @weave.op()
-async def chapter_5_point_2_evals():
+async def multi_agent_evals():
     # Test both instruction styles
     for style in ["standard", "enhanced"]:
         (
@@ -218,4 +220,4 @@ async def chapter_5_point_2_evals():
 
 
 if __name__ == "__main__":
-    asyncio.run(chapter_5_point_2_evals())
+    asyncio.run(multi_agent_evals())
